@@ -170,6 +170,14 @@ Add to your `.vscode/settings.json`:
 }
 ```
 
+## 🌟 Community Contributions
+
+### Community Adaptations
+
+- **[RIPER-5 Mode](https://forum.cursor.com/t/i-created-an-amazing-mode-called-riper-5-mode-fixes-claude-3-7-drastically/65516)** by robotlovehuman - A streamlined 5-mode adaptation focusing on Research, Innovate, Plan, Execute, Review for fixing Claude 3.7 behavior in complex workflows
+
+The RIPER methodology continues to evolve through community contributions and real-world testing across different development environments.
+
 ## 🤝 Contributing
 
 We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
@@ -201,7 +209,7 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guid
 
 MIT License - see [LICENSE](LICENSE) for details.
 
-## 🌟 Acknowledgments
+## 🙏 Acknowledgments
 
 Built for modern AI-assisted development with [Cursor IDE](https://cursor.sh/). Inspired by enterprise development practices and the need for structured AI collaboration.
 
