@@ -1,0 +1,209 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Cursor Rules Index
+
+**Purpose**: This file provides AI agents with a comprehensive overview of all available cursor rules, their relationships, and optimal usage patterns for enterprise-grade development.
+
+## Quick Reference Map
+
+### 🏗️ Core Architecture & Operations
+- **[riper.mdc](mdc:.cursor/rules/riper.mdc)** - RIPER CAT operational protocol with 8 development modes
+- **[cursor_rules.mdc](mdc:.cursor/rules/cursor_rules.mdc)** - Meta-rules for creating and maintaining cursor rules
+
+### 🎨 Frontend Development
+- **[page-layout-standards.mdc](mdc:.cursor/rules/page-layout-standards.mdc)** - Complete page building consistency standards
+- Layout system, responsive design, PageContainer usage, mobile patterns
+
+### 🗄️ Supabase Development Ecosystem
+- **[mcp-supabase-integration.mdc](mdc:.cursor/rules/mcp-supabase-integration.mdc)** - MCP for Supabase tool documentation
+- **[supabase-create-functions.mdc](mdc:.cursor/rules/supabase-create-functions.mdc)** - Database function development
+- **[supabase-create-migration.mdc](mdc:.cursor/rules/supabase-create-migration.mdc)** - Migration best practices
+- **[supabase-edge-functions.mdc](mdc:.cursor/rules/supabase-edge-functions.mdc)** - Edge function development
+- **[supabase-postgres-sql-style-guide.mdc](mdc:.cursor/rules/supabase-postgres-sql-style-guide.mdc)** - SQL formatting standards
+- **[supabase-rls-policies.mdc](mdc:.cursor/rules/supabase-rls-policies.mdc)** - Row Level Security policies
+
+## Rule Relationship Matrix
+
+### 🔄 Primary Workflows
+
+**Page Development Flow**:
+1. **[riper.mdc](mdc:.cursor/rules/riper.mdc)** → Start with RESEARCH mode
+2. **[page-layout-standards.mdc](mdc:.cursor/rules/page-layout-standards.mdc)** → Apply layout standards
+3. **[riper.mdc](mdc:.cursor/rules/riper.mdc)** → PLAN → EXECUTE → REVIEW → COMMIT
+
+**Database Development Flow**:
+1. **[mcp-supabase-integration.mdc](mdc:mcd:.cursor/rules/mcp-supabase-integration.mdc)** → Create development branch
+2. **[supabase-create-migration.mdc](mdc:.cursor/rules/supabase-create-migration.mdc)** → Apply migration standards
+3. **[supabase-rls-policies.mdc](mdc:.cursor/rules/supabase-rls-policies.mdc)** → Implement security
+4. **[mcp-supabase-integration.mdc](mdc:.cursor/rules/mcp-supabase-integration.mdc)** → Test & merge
+
+**Edge Function Development Flow**:
+1. **[supabase-edge-functions.mdc](mdc:.cursor/rules/supabase-edge-functions.mdc)** → Function standards
+2. **[mcp-supabase-integration.mdc](mdc:.cursor/rules/mcp-supabase-integration.mdc)** → Deploy using MCP tools
+3. **[supabase-postgres-sql-style-guide.mdc](mdc:.cursor/rules/supabase-postgres-sql-style-guide.mdc)** → Database queries
+
+### 🔗 Cross-Reference Dependencies
+
+**High Dependency Rules** (frequently referenced):
+- **[riper.mdc](mdc:.cursor/rules/riper.mdc)** ← Referenced by all development workflows
+- **[page-layout-standards.mdc](mdc:.cursor/rules/page-layout-standards.mdc)** ← Referenced by all frontend work
+- **[mcp-supabase-integration.mdc](mdc:.cursor/rules/mcp-supabase-integration.mdc)** ← Referenced by all database work
+
+**Specialized Rules** (specific use cases):
+- **[supabase-create-functions.mdc](mdc:.cursor/rules/supabase-create-functions.mdc)** ← Only for database functions
+- **[supabase-rls-policies.mdc](mdc:.cursor/rules/supabase-rls-policies.mdc)** ← Only for security implementation
+- **[cursor_rules.mdc](mdc:.cursor/rules/cursor_rules.mdc)** ← Only for rule maintenance
+
+## AI Agent Usage Patterns
+
+### 🤖 Development Scenario Guidance
+
+**New Feature Development**:
+```
+1. ENTER R (Research mode via riper.mdc)
+2. Reference page-layout-standards.mdc for UI components
+3. Reference mcp-supabase-integration.mdc for backend requirements
+4. ENTER P (Plan mode) with cross-references
+5. ENTER E (Execute mode) applying all relevant standards
+```
+
+**Database Schema Changes**:
+```
+1. Reference mcp-supabase-integration.mdc for branch creation
+2. Apply supabase-create-migration.mdc standards
+3. Implement supabase-rls-policies.mdc for security
+4. Use mcp-supabase-integration.mcp for testing & deployment
+```
+
+**UI Layout Issues**:
+```
+1. ENTER TROUBLESHOOT mode (via riper.mdc)
+2. Apply page-layout-standards.mdc debugging checklist
+3. Use Alt+D debug tools mentioned in page-layout-standards.mdc
+4. Reference layout constants and best practices
+```
+
+### 🎯 Rule Selection Logic
+
+**When Building Pages**: Always reference [page-layout-standards.mdc](mdc:.cursor/rules/page-layout-standards.mdc)
+**When Working with Database**: Always reference [mcp-supabase-integration.mdc](mdc:.cursor/rules/mcp-supabase-integration.mdc)
+**When Creating Migrations**: Always reference [supabase-create-migration.mdc](mdc:.cursor/rules/supabase-create-migration.mdc)
+**When Implementing Auth/Security**: Always reference [supabase-rls-policies.mdc](mdc:.cursor/rules/supabase-rls-policies.mdc)
+**When Developing Edge Functions**: Always reference [supabase-edge-functions.mdc](mdc:.cursor/rules/supabase-edge-functions.mdc)
+**When Writing SQL**: Always reference [supabase-postgres-sql-style-guide.mdc](mdc:.cursor/rules/supabase-postgres-sql-style-guide.mdc)
+**When Managing Development Workflow**: Always reference [riper.mdc](mdc:.cursor/rules/riper.mdc)
+
+## Context-Aware Rule Application
+
+### 🔍 File Pattern Matching
+
+**Frontend Files** (`src/components/**`, `src/pages/**`):
+- Primary: [page-layout-standards.mdc](mdc:.cursor/rules/page-layout-standards.mdc)
+- Secondary: [riper.mdc](mdc:.cursor/rules/riper.mdc)
+
+**Migration Files** (`supabase/migrations/**`):
+- Primary: [supabase-create-migration.mdc](mdc:.cursor/rules/supabase-create-migration.mdc)
+- Secondary: [supabase-rls-policies.mdc](mdc:.cursor/rules/supabase-rls-policies.mdc)
+- Secondary: [supabase-postgres-sql-style-guide.mdc](mdc:.cursor/rules/supabase-postgres-sql-style-guide.mdc)
+
+**Edge Functions** (`supabase/functions/**`):
+- Primary: [supabase-edge-functions.mdc](mdc:.cursor/rules/supabase-edge-functions.mdc)
+- Secondary: [mcp-supabase-integration.mdc](mdc:.cursor/rules/mcp-supabase-integration.mdc)
+
+**Database Functions** (`.sql` files with `CREATE FUNCTION`):
+- Primary: [supabase-create-functions.mdc](mdc:.cursor/rules/supabase-create-functions.mdc)
+- Secondary: [supabase-postgres-sql-style-guide.mdc](mdc:.cursor/rules/supabase-postgres-sql-style-guide.mdc)
+
+### 🚀 Performance Optimization
+
+**Parallel Rule Processing**: AI agents should process multiple relevant rules simultaneously:
+- **Layout + Architecture**: `page-layout-standards.mdc` + `riper.mdc`
+- **Database + Security**: `mcp-supabase-integration.mdc` + `supabase-rls-policies.mdc`
+- **Migration + SQL Style**: `supabase-create-migration.mdc` + `supabase-postgres-sql-style-guide.mdc`
+
+**Sequential Dependencies**: Some rules must be processed in order:
+1. `riper.mdc` (mode selection) → specific technical rules
+2. `mcp-supabase-integration.mdc` (branch creation) → migration rules
+3. Schema rules → security policy rules
+
+## Quality Assurance Patterns
+
+### ✅ Validation Checklist
+
+**Before Completing Any Task**:
+- [ ] Applied RIPER CAT operational protocol
+- [ ] Followed relevant technical standards
+- [ ] Cross-referenced related rules
+- [ ] Validated against project architecture
+- [ ] Considered mobile responsiveness (if frontend)
+- [ ] Implemented security policies (if database)
+
+**Page Development Validation**:
+- [ ] Used PageContainer with proper props
+- [ ] Applied consistent spacing (pt-6 pb-6 md:pb-12)
+- [ ] Implemented mobile navigation patterns
+- [ ] Used layout state hooks correctly
+- [ ] Tested with Alt+D debug tool
+
+**Database Development Validation**:
+- [ ] Created development branch via MCP
+- [ ] Applied migration naming standards
+- [ ] Implemented RLS policies
+- [ ] Ran security/performance advisors
+- [ ] Tested on branch before merging
+
+## Rule Maintenance Triggers
+
+### 🔄 When to Update This Index
+
+**Add New Rules When**:
+- New technology patterns emerge (3+ files using same pattern)
+- New development workflows are established
+- External dependencies require specific standards
+
+**Update Cross-References When**:
+- Existing rules are modified
+- New relationships between rules are discovered
+- Workflow patterns change
+
+**Archive Rules When**:
+- Technology is deprecated
+- Patterns are superseded by better approaches
+- Rules become obsolete
+
+### 📈 Continuous Improvement
+
+**Monthly Reviews**:
+- Analyze which rules are most/least referenced
+- Identify gaps in rule coverage
+- Update examples with recent code patterns
+- Validate cross-references are still accurate
+
+**Release Integration**:
+- Update rules after major framework updates
+- Add new patterns from successful implementations
+- Remove deprecated patterns
+- Enhance rule relationships based on usage
+
+## Emergency Rule Override
+
+### 🚨 Critical Situations
+
+**Security Issues**: [supabase-rls-policies.mdc](mdc:.cursor/rules/supabase-rls-policies.mdc) takes precedence over all other rules
+**Production Outages**: [mcp-supabase-integration.mdc](mdc:.cursor/rules/mcp-supabase-integration.mdc) emergency procedures override normal workflow
+**Performance Critical**: [page-layout-standards.mdc](mdc:.cursor/rules/page-layout-standards.mdc) optimization patterns override standard patterns
+
+### 🔧 Development Mode Flexibility
+
+**TROUBLESHOOT Mode**: Can temporarily bypass style rules to focus on fixing issues
+**RESEARCH Mode**: Can explore beyond established patterns for innovation
+**EXECUTE Mode**: Must strictly follow all applicable rules
+
+---
+
+**Last Updated**: Auto-generated based on available rule files  
+**Maintenance**: Update when new rules are added or relationships change  
+**AI Usage**: Reference this index at the start of any development task to identify relevant rules
