@@ -213,6 +213,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 Built for modern AI-assisted development with [Cursor IDE](https://cursor.sh/). Inspired by enterprise development practices and the need for structured AI collaboration.
 
----
+Special thanks to the Cursor community for their valuable feedback and discussions about AI-assisted development methodologies. The RIPER CAT methodology was originally shared and refined through community engagement: [RIPER 5 Mode Discussion](https://forum.cursor.com/t/i-created-an-amazing-mode-called-riper-5-mode-fixes-claude-3-7-drastically/65516)
 
+---
 **Ready to transform your development workflow?** Start with `riper.mdc` and experience the power of structured AI-assisted development.
