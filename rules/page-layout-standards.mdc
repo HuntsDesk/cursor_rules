@@ -1,9 +1,4 @@
 ---
-description: 
-globs: src/components/**/*.tsx,src/pages/**/*.tsx
-alwaysApply: false
----
----
 description: Page layout standards using PageContainer component for consistent spacing and responsive design
 globs: src/components/**/*.tsx, src/pages/**/*.tsx
 alwaysApply: true
@@ -17,7 +12,44 @@ alwaysApply: true
 
 **ALWAYS use PageContainer from `@/components/layout/PageContainer` for page layouts**
 
-### Standard Implementation Pattern
+### ⚠️ Critical Mobile Layout Requirements
+
+**Every page with mobile bottom navigation MUST use this container structure:**
+
+```tsx
+import PageContainer from '@/components/layout/PageContainer';
+
+export function MyPage() {
+  return (
+    <div className="flex flex-col h-screen md:h-full">
+      <Navbar />
+      
+      {/* CRITICAL: Mobile constraints to prevent navbar/bottom nav overlap */}
+      <div className="flex-1 overflow-hidden w-full pt-16 md:pt-0">
+        <div className="h-full overflow-auto pb-16 md:pb-0">
+          <PageContainer 
+            disablePadding={false} 
+            className="pt-6 pb-6 md:pb-12 mx-auto px-4" 
+            maxWidth="6xl"
+          >
+            {children}
+          </PageContainer>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+**Why This Structure is Critical:**
+- `pt-16 md:pt-0`: Prevents content from hiding behind fixed mobile navbar (h-16)
+- `pb-16 md:pb-0`: Prevents content from hiding behind mobile bottom navigation
+- `overflow-hidden` → `overflow-auto`: Ensures proper scroll behavior on mobile
+- `h-screen md:h-full`: Correct height management across breakpoints
+
+### Standard Implementation Pattern (Content Pages Only)
+
+For pages WITHOUT mobile bottom navigation:
 
 ```tsx
 import PageContainer from '@/components/layout/PageContainer';
@@ -135,17 +167,21 @@ export function MyPage() {
 ```tsx
 export function StandardPage() {
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-screen md:h-full">
       <FeatureNavbar />
-      <div className="flex-1 overflow-auto w-full">
-        <PageContainer 
-          disablePadding={false} 
-          className="pt-6 pb-6 md:pb-12 mx-auto px-4" 
-          maxWidth="6xl"
-        >
-          <h1>Page Title</h1>
-          {/* Content */}
-        </PageContainer>
+      
+      {/* Main content with proper mobile constraints */}
+      <div className="flex-1 overflow-hidden w-full pt-16 md:pt-0">
+        <div className="h-full overflow-auto pb-16 md:pb-0">
+          <PageContainer 
+            disablePadding={false} 
+            className="pt-6 pb-6 md:pb-12 mx-auto px-4" 
+            maxWidth="6xl"
+          >
+            <h1>Page Title</h1>
+            {/* Content */}
+          </PageContainer>
+        </div>
       </div>
     </div>
   );
@@ -185,28 +221,271 @@ export function MobilePage() {
 ```tsx
 export function SettingsPage() {
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-screen md:h-full">
       <SettingsNavbar />
-      <div className="flex-1 overflow-auto w-full">
-        <PageContainer 
-          disablePadding={false} 
-          className="pt-4 pb-20 md:pb-12 mx-auto px-4" 
-          maxWidth="6xl"
-        >
-          {/* Settings content with extra bottom padding for mobile */}
-        </PageContainer>
+      
+      {/* Main content with proper mobile constraints */}
+      <div className="flex-1 overflow-hidden w-full pt-16 md:pt-0">
+        <div className="h-full overflow-auto pb-16 md:pb-0">
+          <PageContainer 
+            disablePadding={false} 
+            className="pt-4 pb-6 md:pb-12 mx-auto px-4" 
+            maxWidth="6xl"
+          >
+            {/* Settings content */}
+          </PageContainer>
+        </div>
       </div>
     </div>
   );
 }
 ```
 
+## Complex Application Interface Patterns
+
+### Layout Decision Criteria
+
+**Use PageContainer for:**
+- Content-focused pages (blogs, documentation, forms)
+- Marketing pages and landing pages
+- Settings and configuration pages
+- Simple dashboard pages
+- Any page where content should be centered and constrained
+
+**Use Custom Layouts for:**
+- **Multi-panel interfaces** (like IDEs, note-taking apps, email clients)
+- **Resizable panel layouts** with drag handles
+- **Three-view mobile navigation** (sidebar → list → detail)
+- **Full-viewport applications** that need custom scroll management
+- **Complex state-dependent layouts** with panel show/hide logic
+- Applications that behave more like desktop software than websites
+
+### When NOT to Use PageContainer
+
+**PageContainer is designed for content pages, not complex application interfaces.** The key indicator is whether your interface needs to:
+
+1. **Fill the entire viewport** without centered content constraints
+2. **Manage multiple content areas** simultaneously (panels, sidebars, etc.)
+3. **Handle complex responsive transformations** (3-panel → 3-view mobile)
+4. **Provide resizable or collapsible sections**
+5. **Maintain application-like state** across navigation areas
+
+### Multi-Panel Desktop Layout Pattern
+
+For complex application interfaces like the notes page:
+
+```tsx
+export function NotesPage() {
+  const [showTagSidebar, setShowTagSidebar] = useState(true);
+  const [showNotesList, setShowNotesList] = useState(true);
+  const [tagSidebarWidth, setTagSidebarWidth] = useState(256);
+  const [notesListWidth, setNotesListWidth] = useState(340);
+  
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
+
+  return (
+    <div className="flex flex-col h-full">
+      <NotesNavbar />
+      
+      {/* Multi-panel desktop layout */}
+      <div className="flex h-full w-full min-w-0 bg-gray-50 dark:bg-gray-900 relative">
+        {/* Tag Sidebar with resize handle */}
+        {showTagSidebar && (
+          <>
+            <div 
+              className="bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex-shrink-0"
+              style={{ width: tagSidebarWidth }}
+            >
+              <TagSidebar />
+            </div>
+            <ResizeHandle onResize={setTagSidebarWidth} />
+          </>
+        )}
+
+        {/* Notes List with resize handle */}
+        {showNotesList && (
+          <>
+            <div 
+              className="bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 flex-shrink-0"
+              style={{ width: notesListWidth }}
+            >
+              <NotesList />
+            </div>
+            <ResizeHandle onResize={setNotesListWidth} />
+          </>
+        )}
+
+        {/* Main content area */}
+        <div className="flex-1 flex flex-col bg-white dark:bg-gray-800">
+          <NoteEditor />
+        </div>
+
+        {/* Panel toggle controls */}
+        {isDesktop && (
+          <div className="absolute bottom-4 left-4 z-40 flex gap-2">
+            <Button onClick={() => setShowTagSidebar(!showTagSidebar)}>
+              Tags
+            </Button>
+            <Button onClick={() => setShowNotesList(!showNotesList)}>
+              List
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+```
+
+### Three-View Mobile Navigation Pattern
+
+For complex applications on mobile, use a three-view navigation pattern:
+
+```tsx
+type MobileView = 'tags' | 'list' | 'editor';
+
+export function NotesPage() {
+  const [mobileView, setMobileView] = useState<MobileView>('list');
+  const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
+  
+  const isMobile = useMediaQuery('(max-width: 640px)');
+
+  // Auto-switch to editor when note selected
+  useEffect(() => {
+    if (isMobile && selectedNoteId && mobileView !== 'editor') {
+      setMobileView('editor');
+    }
+  }, [selectedNoteId, isMobile, mobileView]);
+
+  // Reset to list when no note selected
+  useEffect(() => {
+    if (isMobile && !selectedNoteId && mobileView === 'editor') {
+      setMobileView('list');
+    }
+  }, [selectedNoteId, isMobile, mobileView]);
+
+  const renderMobileContent = () => {
+    switch (mobileView) {
+      case 'tags':
+        return (
+          <TagSidebar 
+            onTagSelect={(tag) => {
+              setSelectedTag(tag);
+              setMobileView('list'); // Auto-switch to list
+            }}
+          />
+        );
+      case 'list':
+        return (
+          <NotesList 
+            onNoteSelect={(noteId) => {
+              setSelectedNoteId(noteId);
+              setMobileView('editor'); // Auto-switch to editor
+            }}
+          />
+        );
+      case 'editor':
+        return <NoteEditor />;
+    }
+  };
+
+  if (isMobile) {
+    return (
+      <div className="flex flex-col h-screen">
+        <NotesNavbar />
+        <div className="flex-1 overflow-hidden pt-16">
+          {renderMobileContent()}
+        </div>
+        <ThreeTabMobileBottomNav 
+          activeView={mobileView}
+          onViewChange={setMobileView}
+        />
+      </div>
+    );
+  }
+
+  // Desktop layout...
+}
+```
+
+### Resizable Panel Implementation
+
+For resizable panels in desktop layouts:
+
+```tsx
+const handleMouseDown = useCallback((e: React.MouseEvent, panel: string) => {
+  if (!isDesktop) return;
+  
+  e.preventDefault();
+  isDragging.current = panel;
+  startX.current = e.clientX;
+  startWidth.current = getCurrentWidth(panel);
+  
+  document.addEventListener('mousemove', handleMouseMove);
+  document.addEventListener('mouseup', handleMouseUp);
+  document.body.style.cursor = 'col-resize';
+  document.body.style.userSelect = 'none';
+}, [isDesktop]);
+
+const handleMouseMove = useCallback((e: MouseEvent) => {
+  if (!isDragging.current || !isDesktop) return;
+  
+  const deltaX = e.clientX - startX.current;
+  const newWidth = Math.max(minWidth, Math.min(maxWidth, startWidth.current + deltaX));
+  
+  updatePanelWidth(isDragging.current, newWidth);
+}, [isDesktop]);
+
+// Resize handle component
+<div
+  className="w-1 bg-gray-200 dark:bg-gray-700 hover:bg-orange-400 cursor-col-resize flex-shrink-0 relative group"
+  onMouseDown={(e) => handleMouseDown(e, 'panel-name')}
+>
+  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+    <GripVertical className="h-4 w-4 rotate-90" />
+  </div>
+</div>
+```
+
+### Dynamic Content Filtering Patterns
+
+For navigation components with dynamic counts based on search/filters:
+
+```tsx
+// Calculate counts from filtered content
+const notesForTagCounts = notes.filter(note => {
+  const matchesSearch = !searchQuery || 
+    note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    note.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    note.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+  
+  return matchesSearch; // Exclude tag filtering to show search impact
+});
+
+const tagCounts = notesForTagCounts.reduce((acc, note) => {
+  note.tags.forEach(tag => {
+    acc[tag] = (acc[tag] || 0) + 1;
+  });
+  return acc;
+}, {} as Record<string, number>);
+
+// Pass dynamic counts to navigation
+<TagSidebar
+  tags={tagData}
+  totalCount={notesForTagCounts.length} // Updates with search
+  selectedTag={selectedTag}
+  onTagSelect={setSelectedTag}
+/>
+```
+
 ## Responsive Design Requirements
 
 ### Breakpoints (from `@/constants/layout`)
 - **Mobile**: `max-width: 640px`
-- **Tablet**: `640px - 1024px`
-- **Desktop**: `min-width: 1280px`
+- **Tablet**: `640px - 1024px`  
+- **Desktop**: `min-width: 1024px` (standard) / `min-width: 1280px` (layout system integration)
+
+**Note**: Complex applications may use `1024px` for desktop detection while the main layout system uses `1280px` for sidebar integration. Choose the appropriate breakpoint based on your specific layout needs.
 
 ### Mobile-Specific Requirements
 - **Fixed navbar**: Use `fixed md:sticky` positioning
@@ -216,6 +495,8 @@ export function SettingsPage() {
 - **Touch scrolling**: Include `-webkit-overflow-scrolling: touch`
 
 ### Mobile Bottom Navigation Standards
+
+#### Standard Four-Tab Navigation
 ```tsx
 {/* Standard mobile bottom navigation pattern */}
 <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-50">
@@ -229,13 +510,90 @@ export function SettingsPage() {
 </div>
 ```
 
+#### Three-Tab Application Navigation
+For complex applications with multi-view navigation:
+
+```tsx
+interface ThreeTabMobileBottomNavProps {
+  activeView: 'tags' | 'list' | 'editor';
+  onViewChange: (view: 'tags' | 'list' | 'editor') => void;
+  hasSelectedNote?: boolean;
+}
+
+export function ThreeTabMobileBottomNav({ activeView, onViewChange, hasSelectedNote }: ThreeTabMobileBottomNavProps) {
+  return (
+    <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-50"
+         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+      <div className="grid grid-cols-3 gap-1 px-2 py-2">
+        <MobileNavButton
+          isActive={activeView === 'tags'}
+          onClick={() => onViewChange('tags')}
+          icon={<Hash className="h-5 w-5" />}
+          text="Tags"
+        />
+        
+        <MobileNavButton
+          isActive={activeView === 'list'}
+          onClick={() => onViewChange('list')}
+          icon={<FileText className="h-5 w-5" />}
+          text="Notes"
+        />
+        
+        <MobileNavButton
+          isActive={activeView === 'editor'}
+          onClick={() => onViewChange('editor')}
+          icon={<Edit className="h-5 w-5" />}
+          text="Editor"
+          disabled={!hasSelectedNote}
+        />
+      </div>
+    </div>
+  );
+}
+```
+
 **Mobile Bottom Nav Requirements**:
 - **Fixed Positioning**: Always use `fixed bottom-0 left-0 right-0`
 - **Z-Index**: Use `z-50` for proper layering above content
 - **Safe Area**: Include `padding-bottom: env(safe-area-inset-bottom, 0)` for iOS devices
-- **Grid Layout**: Use `grid grid-cols-X` where X matches number of nav items
+- **Grid Layout**: Use `grid grid-cols-X` where X matches number of nav items (3 or 4)
 - **Icon Size**: Standard `h-5 w-5` for all icons
 - **Text Size**: Use `text-xs` for labels
+- **State Management**: Include active/disabled states for application navigation
+
+#### Mobile Navigation Consistency Standards
+
+**Use MobileNavLink for navigation between pages:**
+```tsx
+import { MobileNavLink } from '@/components/common/MobileNavLink';
+
+<MobileNavLink 
+  to="/flashcards/study" 
+  icon={<Brain className="h-5 w-5" />} 
+  text="Study" 
+/>
+```
+
+**Use MobileNavButton for view switching within a page:**
+```tsx
+import { MobileNavButton } from '@/components/common/MobileNavButton';
+
+<MobileNavButton
+  onClick={() => onViewChange('tags')}
+  icon={<Hash className="h-5 w-5" />}
+  text="Tags"
+  isActive={activeView === 'tags'}
+  disabled={false}
+/>
+```
+
+**Consistent Styling Pattern:**
+- Layout: `flex flex-col items-center justify-center space-y-1 py-1`
+- Active color: `text-[#F37022]` (brand orange)
+- Inactive color: `text-gray-600 dark:text-gray-300`
+- Disabled color: `text-gray-400 dark:text-gray-600 opacity-50`
+- No background colors or rounded corners
+- Simple, clean design matching system UI patterns
 
 ### iOS Safe Area Support
 ```css
@@ -306,6 +664,136 @@ export function ResponsiveComponent() {
 
 ## Common Anti-Patterns to Avoid
 
+### ❌ Missing Mobile Layout Container Structure
+```tsx
+// DON'T: Direct PageContainer usage without mobile constraints
+<div className="flex flex-col h-screen">
+  <Navbar />
+  <PageContainer className="pt-6 pb-6 md:pb-12 mx-auto px-4" maxWidth="6xl">
+    {content}
+  </PageContainer>
+</div>
+
+// DO: Proper mobile-first container structure  
+<div className="flex flex-col h-screen md:h-full">
+  <Navbar />
+  {/* Critical mobile constraints */}
+  <div className="flex-1 overflow-hidden w-full pt-16 md:pt-0">
+    <div className="h-full overflow-auto pb-16 md:pb-0">
+      <PageContainer className="pt-6 pb-6 md:pb-12 mx-auto px-4" maxWidth="6xl">
+        {content}
+      </PageContainer>
+    </div>
+  </div>
+</div>
+```
+
+**Critical Mobile Layout Requirements:**
+- **Container Height**: Use `h-screen md:h-full` on root container
+- **Top Spacing**: Add `pt-16 md:pt-0` to account for fixed mobile navbar
+- **Bottom Spacing**: Add `pb-16 md:pb-0` to account for mobile bottom navigation  
+- **Overflow Management**: Use `overflow-hidden` on outer container, `overflow-auto` on inner scrollable area
+- **Z-Index Consistency**: Mobile bottom navigation must use `z-50`, not `z-20`
+
+### ❌ Early Returns That Bypass UI Controls
+```tsx
+// DON'T: Return early and bypass header controls
+export function MyComponent() {
+  if (items.length === 0) {
+    return <EmptyState title="No items" />;
+  }
+  
+  return (
+    <div>
+      <header>
+        <h1>Items</h1>
+        <button>New Item</button>
+        <DropdownMenu>Templates</DropdownMenu>
+      </header>
+      <main>
+        <ItemsList items={items} />
+      </main>
+    </div>
+  );
+}
+```
+
+### ✅ Proper Empty State Structure
+```tsx
+// DO: Keep header controls visible, handle empty state in content area
+export function MyComponent() {
+  return (
+    <div>
+      <header>
+        <h1>Items</h1>
+        <button>New Item</button>
+        <DropdownMenu>Templates</DropdownMenu>
+      </header>
+      <main>
+        {items.length === 0 ? (
+          <EmptyState 
+            title="No items yet" 
+            description="Create your first item using the New Item button above."
+          />
+        ) : (
+          <ItemsList items={items} />
+        )}
+      </main>
+    </div>
+  );
+}
+```
+
+### ❌ Component Structure That Hides Controls
+```tsx
+// DON'T: Conditional rendering that bypasses essential UI
+export function ListPage() {
+  const [items, setItems] = useState([]);
+  
+  // This hides the "Create" button when list is empty
+  if (items.length === 0) {
+    return <EmptyState title="No items" />;
+  }
+  
+  return (
+    <div>
+      <div className="header">
+        <h1>Items</h1>
+        <button onClick={handleCreate}>Create New</button>
+      </div>
+      <ItemsList items={items} />
+    </div>
+  );
+}
+```
+
+### ✅ Component Structure That Preserves Controls
+```tsx
+// DO: Always render essential UI elements
+export function ListPage() {
+  const [items, setItems] = useState([]);
+  
+  return (
+    <div>
+      <div className="header">
+        <h1>Items</h1>
+        <button onClick={handleCreate}>Create New</button>
+      </div>
+      <div className="content">
+        {items.length === 0 ? (
+          <EmptyState 
+            title="No items yet" 
+            description="Use the Create New button above to add your first item."
+          />
+        ) : (
+          <ItemsList items={items} />
+        )}
+      </div>
+    </div>
+  );
+}
+```
+
 ### ❌ Manual Layout Containers
 ```tsx
 // DON'T: Manual max-width and centering
@@ -349,9 +837,9 @@ export function ResponsiveComponent() {
 <PageContainer className="pt-6 pb-6 md:pb-12 mx-auto px-4">
 ```
 
-### ❌ Creating Custom Layout Wrappers
+### ❌ Creating Custom Layout Wrappers (For Content Pages)
 ```tsx
-// DON'T: Custom layout components
+// DON'T: Custom layout components for standard content
 export function MyCustomLayout({ children }) {
   return (
     <div className="max-w-6xl mx-auto px-4 py-6">
@@ -360,10 +848,24 @@ export function MyCustomLayout({ children }) {
   );
 }
 
-// DO: Use PageContainer directly
+// DO: Use PageContainer directly for content pages
 <PageContainer className="pt-6 pb-6 md:pb-12 mx-auto px-4" maxWidth="6xl">
   {children}
 </PageContainer>
+
+// ✅ EXCEPTION: Custom layouts ARE appropriate for complex applications
+export function NotesPage() {
+  return (
+    <div className="flex flex-col h-full">
+      <NotesNavbar />
+      <div className="flex h-full">
+        <TagSidebar />
+        <NotesList />
+        <NoteEditor />
+      </div>
+    </div>
+  );
+}
 ```
 
 ### ❌ Ignoring Sidebar State
@@ -454,6 +956,14 @@ Mobile bottom navigation components ([MobileBottomNav](mdc:src/components/settin
 - [MobileBottomNav.tsx](mdc:src/components/settings/MobileBottomNav.tsx) - Mobile bottom navigation component
 - [MobileNavLink.tsx](mdc:src/components/common/MobileNavLink.tsx) - Reusable mobile nav link component
 - [layout-utils.ts](mdc:src/lib/layout-utils.ts) - Layout utility functions
+
+#### Complex Application Pattern Files
+- [NotesPage.tsx](mdc:src/pages/NotesPage.tsx) - Multi-panel desktop layout with three-view mobile navigation
+- [NotesNavbar.tsx](mdc:src/components/notes/NotesNavbar.tsx) - Feature navbar with mobile hamburger pattern
+- [MobileBottomNav.tsx](mdc:src/components/notes/MobileBottomNav.tsx) - Three-tab mobile navigation implementation
+- [TagSidebar.tsx](mdc:src/components/notes/TagSidebar.tsx) - Resizable sidebar with dynamic counts
+- [NotesList.tsx](mdc:src/components/notes/NotesList.tsx) - List panel with responsive breakpoints
+- [NoteEditor.tsx](mdc:src/components/notes/NoteEditor.tsx) - Editor panel with full-height layout
 
 ## Performance Considerations
 
@@ -660,5 +1170,8 @@ const { contentMargin } = useLayoutState();
   <main className="flex-1 overflow-auto"> {/* Scrollable content */}
     <PageContainer>{/* Your content */}</PageContainer>
   </main>
+</div>
+```
+
 </div>
 ```
