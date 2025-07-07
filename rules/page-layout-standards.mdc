@@ -31,8 +31,12 @@ export function MyPage() {
             disablePadding={false} 
             className="pt-6 pb-6 md:pb-12 mx-auto px-4" 
             maxWidth="6xl"
+            noOverflow={true}  {/* CRITICAL: Prevents double-scroll issues */}
           >
-            {children}
+            {/* IMPORTANT: Content wrapper needs bottom padding for mobile */}
+            <div className="space-y-6 pb-20 md:pb-8">
+              {children}
+            </div>
           </PageContainer>
         </div>
       </div>
@@ -43,9 +47,16 @@ export function MyPage() {
 
 **Why This Structure is Critical:**
 - `pt-16 md:pt-0`: Prevents content from hiding behind fixed mobile navbar (h-16)
-- `pb-16 md:pb-0`: Prevents content from hiding behind mobile bottom navigation
+- `pb-16 md:pb-0`: Provides base padding for mobile bottom navigation
 - `overflow-hidden` → `overflow-auto`: Ensures proper scroll behavior on mobile
 - `h-screen md:h-full`: Correct height management across breakpoints
+- `noOverflow={true}`: **CRITICAL** - Prevents PageContainer from adding its own overflow-auto, avoiding double-scroll issues
+- `pb-20 md:pb-8` on content wrapper: Additional padding to ensure last content items are visible above mobile nav
+
+**Common Issues and Solutions:**
+1. **Double-scroll behavior**: Always add `noOverflow={true}` to PageContainer when it's inside a scrollable container
+2. **Content cut off at bottom**: Add `pb-20 md:pb-8` to your main content wrapper inside PageContainer
+3. **Page not starting at top**: Ensure ScrollToTop component is included, or add useEffect to scroll on mount
 
 ### Standard Implementation Pattern (Content Pages Only)
 
